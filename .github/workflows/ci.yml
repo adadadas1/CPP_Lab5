@@ -22,10 +22,15 @@ jobs:
 
       - name: Установка SFML (macOS)
         if: matrix.os == 'macos-latest'
-        run: brew install sfml
+        run: brew install sfml@2
 
-      - name: Конфигурация CMake
+      - name: Конфигурация CMake (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         run: cmake -S . -B build
+
+      - name: Конфигурация CMake (macOS)
+        if: matrix.os == 'macos-latest'
+        run: cmake -S . -B build -DSFML_DIR=$(brew --prefix sfml@2)/lib/cmake/SFML
 
       - name: Сборка
         run: cmake --build build
