@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Установка SFML (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y libsfml-dev
+
+      - name: Установка SFML (macOS)
+        if: matrix.os == 'macos-latest'
+        run: brew install sfml
+
+      - name: Конфигурация CMake
+        run: cmake -S . -B build
+
+      - name: Сборка
+        run: cmake --build build
